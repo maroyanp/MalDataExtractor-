@@ -14,7 +14,7 @@ url = "https://api.myanimelist.net/v2/users/@me/animelist"
 
 # want to grab only anime that has been finished and sorted by scores descending
 headers = {
-    'fields': 'list_status, score', 
+    "fields": "id,title,mean,rank,popularity,num_list_users,media_type,status,start_season,genres,my_list_status",
     "limit": 500,  # max limit is 1000
 }
 
@@ -32,8 +32,10 @@ anime_list = []
 for entry in data['data']:
     anime_list.append({
         "title": entry["node"]["title"],
-        "score": entry["list_status"]["score"]
+        "score": entry["node"]["my_list_status"]["score"],
+        'id' : entry["node"]["id"],
+        "generes": [genre["name"] for genre in entry["node"]["genres"]]
     })
 
 df = pd.DataFrame(anime_list)
-df.to_csv("user_anime_list.csv", index=False)
+df.to_csv("data/user_anime_list.csv", index=False)
